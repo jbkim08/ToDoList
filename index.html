@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <title>TO DO LIST</title>
+    <!-- 메인 CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- 폰트오썸 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css">
+    <!-- 제이쿼리 CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <input type="text" class="txtb" placeholder="할일을 적어요">
+      <div class="todo">
+        <h3>해야 할일</h3>
+      </div>
+
+      <div class="comp">
+        <h3>완료된 일</h3>
+      </div>
+    </div>
+
+    <script>
+      // 추가할 div 태그들 정의 const는 상수 변하지 않음
+      const task = "<div class='task'></div>";
+      const del = "<i class='fas fa-trash-alt'></i>";
+      const check = "<i class='fas fa-check'></i>";
+
+      //키 입력시
+      $(".txtb").on("keyup",function(e){
+        var txt = $(".txtb").val();  // 입력값을 txt에 저장
+        //13은 엔터 && 입력값이 있을때
+        if(e.keyCode == 13 && txt != "")
+        {
+          $(".todo").append(task); //todo 자식 맨밑에 추가
+          $(".task:last").text(txt); //task중 가장 아래추가
+          $(".task:last").append(del,check);
+          $(".txtb").val(""); //인풋 창 클리어
+        }
+      });
+       
+      //  클릭 이벤트 : 해야할일이나 완료된일을 클릭시
+      $(".todo, .comp").click(function(e){
+        // console.log(e.target)
+        var target = $(e.target); 
+        if(target.is("i.fa-trash-alt")){//클릭한곳이 휴지통아이콘
+          var delItem = target.parent();//클릭한 아이콘의 부모태그
+          delItem.fadeOut(function(){//페이드아웃 효과
+            delItem.remove();
+          })
+        } else if(target.is("i.fa-check")){//클릭한곳이 체크아이콘
+          var compItem = target.parent();//클릭한 아이콘의 부모태그
+          compItem.fadeOut(function(){//페이드아웃
+            $('.comp').append(compItem); //완료리스트로 이동
+            compItem.fadeIn();        //페이드인
+          });
+        }
+      });
+
+    </script>
+
+  </body>
+</html>
