@@ -28,9 +28,52 @@
       const task = "<div class='task'></div>";
       const del = "<i class='fas fa-trash-alt'></i>";
       const check = "<i class='fas fa-check'></i>";
+      
+      var LIST; //할일들을 저장변수
 
-      //키 입력시
-      $(".txtb").on("keyup",function(e){
+      // html 문서 로드후
+      $(document).ready(function(){
+        //로컬저장소에서 'todos' 불러옴
+        loadLS();
+        //키 입력시
+        $(".txtb").on("keyup",inputTask);
+        //  클릭 이벤트 : 해야할일이나 완료된일을 클릭시
+        $(".todo, .comp").click(iconClick);
+      });
+
+      function loadLS(){
+        console.log(localStorage.getItem("todos"));
+        if(localStorage.getItem("todos") === null) {
+          LIST = [];
+        } else {
+          LIST = JSON.parse(localStorage.getItem("todos"));
+        }
+        LIST.forEach(function(item){
+          $(".todo").append(task); //todo 자식 맨밑에 추가
+          $(".task:last").text(item); //task중 가장 아래추가
+          $(".task:last").append(del,check);
+        });
+
+      }
+
+
+      function saveToLS(task){ //로컬저장소에서 할일 저장
+        // let LIST;
+        // if(localStorage.getItem("todos") === null) {
+        //   LIST = [];
+        // } else {
+        //   LIST = JSON.parse(localStorage.getItem("todos"));
+        // }
+        // alert(task);
+        LIST.push(task);
+        //LIST
+
+        localStorage.setItem("todos", JSON.stringify(LIST));
+      }  
+
+
+       
+      function inputTask(e){
         var txt = $(".txtb").val();  // 입력값을 txt에 저장
         //13은 엔터 && 입력값이 있을때
         if(e.keyCode == 13 && txt != "")
@@ -38,12 +81,16 @@
           $(".todo").append(task); //todo 자식 맨밑에 추가
           $(".task:last").text(txt); //task중 가장 아래추가
           $(".task:last").append(del,check);
+
+          saveToLS(txt); // 로컬저장소에 저장  
+
           $(".txtb").val(""); //인풋 창 클리어
+          
         }
-      });
-       
-      //  클릭 이벤트 : 해야할일이나 완료된일을 클릭시
-      $(".todo, .comp").click(function(e){
+      }
+
+      
+      function iconClick(e){
         // console.log(e.target)
         var target = $(e.target); 
         if(target.is("i.fa-trash-alt")){//클릭한곳이 휴지통아이콘
@@ -58,7 +105,7 @@
             compItem.fadeIn();        //페이드인
           });
         }
-      });
+      }
 
     </script>
 
